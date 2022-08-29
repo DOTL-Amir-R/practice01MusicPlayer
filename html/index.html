@@ -147,17 +147,23 @@
                     <div class="music-controls-container d-flex gap-25 justify-content-center">
                         <img id="prev-ten-sec-btn" class="prev-ten-sec-btn" src="../img/prev-10sec-icon.svg" alt="prev 10 sec">
                         <div class="stop-next-previous-btn-container d-flex gap-19 align-items-center">
-                            <div class="prev-music-btn-container button-white-circle-one">
+                            <div id="prev-music-btn-container" class="prev-music-btn-container button-white-circle-one">
                                 <img class="prev-music-btn " src="../img/prev-song.svg" alt="previous song">
                             </div>
                             <div class="stop-music-btn-container button-white-circle-two">
                                 <img id="stop-music-btn" class="stop-music-btn " src="../img/stop-icon.svg" alt="stop button">
                             </div>
-                            <div class="next-music-btn-container button-white-circle-one">
+                            <div id="next-music-btn-container" class="next-music-btn-container button-white-circle-one">
                                 <img class="next-music-btn " src="../img/next-song.svg" alt="next song">
                             </div>
                         </div>
                         <img id="next-ten-sec-btn" class="next-ten-sec-btn" src="../img/next-10sec-icon.svg" alt="next 10 sec">
+                    </div>
+                    <div class="additional-controls-container">
+                        <button id="reapet-btn" class="reapet-btn f-size-15 f-weight-500">Reapet:Off</button>
+                        <button id="shuffel-btn" class="shuffel-btn f-size-15 f-weight-500">Shuffel:Off</button>
+                        <label class="f-size-15 f-weight-500">Volume:</label>
+                        <input id="volume-input" type="range" min="0" max="10" value="10">
                     </div>
                 </div>
             </div>

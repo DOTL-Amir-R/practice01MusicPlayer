@@ -1,3 +1,4 @@
+
 import musicData from '../data/musics-data.js'
 
 const audio = document.getElementById('audio');
@@ -15,6 +16,13 @@ const durationTime = document.getElementById('duration-time');
 const inputProgressPlayingMusic = document.getElementById('input-progress-playing-music');
 const nextTenSecBtn = document.getElementById('next-ten-sec-btn');
 const prevTenSecBtn = document.getElementById('prev-ten-sec-btn');
+const nextMusicBtnContainer = document.getElementById('next-music-btn-container');
+const prevMusicBtnContainer = document.getElementById('prev-music-btn-container');
+const reapet = document.getElementById('reapet-btn');
+let isReapet = true;
+const shuffel = document.getElementById('shuffel-btn')
+let isShuffel = true;
+const volumeInput = document.getElementById('volume-input')
 let   IsPlayed = false
 
 function setTime(audioPlayed){
@@ -27,7 +35,6 @@ function setTime(audioPlayed){
         const minutesCurrent = `0${Math.floor(audioPlayed.currentTime / 60)}`
         const secondsCurrent = `0${Math.floor(audioPlayed.currentTime % 60)}`
         currentTime.innerHTML = `${minutesCurrent.slice(-2)}: ${secondsCurrent.slice(-2)}`
-        // console.log(secondsCurrent)
     },1000)
 }
 
@@ -69,11 +76,23 @@ function progressOfMusic(song){
     },1000)
 }
 
+function changeMusicByIndex(musicByIndex) {
+    let currentMusicByIndex = musicByIndex
+    renderNewSong(currentMusicByIndex)
+    audio.src = currentMusicByIndex.audio
+    audio.play().then(()=>{
+        progressOfMusic(audio)
+        setTime(audio)
+    })
+}
+
+
+
 function playMyMusic(){
     
     [...songSectionContainer.children].forEach((selectedSong)=>{
         selectedSong.addEventListener('click',()=>{
-            const currentMusic = musicData().filter((item)=> item.id === parseInt(selectedSong.dataset.id))[0]
+            let currentMusic = musicData().filter((item)=> item.id === parseInt(selectedSong.dataset.id))[0]
 
             audio.src = currentMusic.audio
             renderNewSong(currentMusic)
@@ -108,6 +127,83 @@ function playMyMusic(){
                     audio.currentTime = prevTenSecBtn
                     inputProgressPlayingMusic.value = prevTenSecBtn
                 })
+                let indexCurrentMusic = musicData().findIndex((item)=> item.id === Number(currentMusic.id))
+                nextMusicBtnContainer.addEventListener('click',()=>{
+                    if(indexCurrentMusic === musicData().length - 1){
+                        indexCurrentMusic = 0
+                        changeMusicByIndex(musicData()[indexCurrentMusic])
+                    }else{
+                        indexCurrentMusic++
+                        changeMusicByIndex(musicData()[indexCurrentMusic])
+                    }
+                })
+                prevMusicBtnContainer.addEventListener('click',()=>{
+                    if(indexCurrentMusic === 0){
+                        indexCurrentMusic = musicData().length - 1
+                        changeMusicByIndex(musicData()[indexCurrentMusic])
+                    }else{
+                        indexCurrentMusic--
+                        changeMusicByIndex(musicData()[indexCurrentMusic])
+                    }
+
+
+                })
+                volumeInput.addEventListener('change',()=>{
+                    const musicVolume = volumeInput.value / 10 
+                    console.log(musicVolume)
+                    audio.volume = musicVolume
+                })
+                shuffel.addEventListener('click',()=>{
+                    if(isShuffel){
+                        isShuffel = false
+                        shuffel.innerHTML = `Shuffel:On`
+                        audio.onended = function (){
+                            const shuffelMusicIndex  = Math.floor(Math.random() * musicData().length)
+                            const musicShuffeled = musicData()[shuffelMusicIndex]
+                            changeMusicByIndex(musicShuffeled)
+                            console.log(musicShuffeled)
+
+                        }
+                        // changeMusicByIndex(musicShuffeled)
+
+                    }else{
+                        isShuffel = true
+                        shuffel.innerHTML = `Shuffel:Off`
+                        audio.onended = function () {
+                            if(indexCurrentMusic === musicData().length - 1){
+                                indexCurrentMusic = 0
+                                changeMusicByIndex(musicData()[indexCurrentMusic])
+                            }else{
+                                indexCurrentMusic++
+                                changeMusicByIndex(musicData()[indexCurrentMusic])
+                            }
+                        }
+
+                    }
+                })
+                reapet.addEventListener('click',()=>{
+                    if(isReapet){
+                        isReapet = false
+                        reapet.innerHTML = `Reapet:On`
+                        audio.onended = function (){
+                            changeMusicByIndex(musicData()[indexCurrentMusic])
+
+                        }
+                    }else{
+                        isReapet = true
+                        reapet.innerHTML = `Reapet:Off`
+                        audio.onended = function () {
+                            if(indexCurrentMusic === musicData().length - 1){
+                                indexCurrentMusic = 0
+                                changeMusicByIndex(musicData()[indexCurrentMusic])
+                            }else{
+                                indexCurrentMusic++
+                                changeMusicByIndex(musicData()[indexCurrentMusic])
+                            }
+                        }
+
+                    }
+                })
             })
 
 
@@ -137,7 +233,7 @@ musicData().forEach((item)=>{
         <img class="like-btn " src="../img/empty-like-button.svg"/>
     </figure>
     `
-    console.log('hi')
+
     songSectionContainer.innerHTML += createElement;
     playMyMusic()
 
